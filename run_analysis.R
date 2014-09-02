@@ -1,19 +1,22 @@
 # PREPARATION AND LOADING DATA INTO R
 
 ### download datasets to local computer:
-download.file(url = 'https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip', destfile = 'datasets.zip')
+download.file('https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip',
+              'datasets.zip')
 
 ### unzip data files:
 unzip(zipfile = 'datasets.zip')
 
 ### create a vector, which consists paths to files from 'test' and 'train' directories:
-filesPaths <- list.files(path = c('UCI HAR Dataset/test', 'UCI HAR Dataset/train'), pattern = '\\.txt', full.names = TRUE)
+filesPaths <- list.files(path = c('UCI HAR Dataset/test', 'UCI HAR Dataset/train'),
+                         pattern = '\\.txt', full.names = TRUE)
 
 ### create a list, which consists data frame objects from 'test' and 'train' directories:
 filesList <- lapply(X = filesPaths, FUN = read.table, header = FALSE, stringsAsFactors = FALSE)
 
 ### create a vector, which consists paths to files with label names:
-labelsPaths <- list.files(path = 'UCI HAR Dataset', pattern = 'labels.txt$|features.txt$', full.names = TRUE)
+labelsPaths <- list.files(path = 'UCI HAR Dataset', pattern = 'labels.txt$|features.txt$',
+                          full.names = TRUE)
 
 ### create a list, which consists label names for data:
 labelsList <- lapply(X = labelsPaths, FUN = readLines)
@@ -35,7 +38,8 @@ activityComplete <- rbind(filesList[[3]], filesList[[6]])
 names(variablesComplete) <- labelsList[[2]]
 
 ### create a recognition vector, which consists index of mean and standard deviation estimations:
-variablesIndex <- grep(pattern = '-[Mm][Ee][Aa][Nn]\\(\\)|-[Ss][Tt][Dd]\\(\\)', x = names(variablesComplete))
+variablesIndex <- grep(pattern = '-[Mm][Ee][Aa][Nn]\\(\\)|-[Ss][Tt][Dd]\\(\\)',
+                       x = names(variablesComplete))
 
 ### subset 'variablesComplete' data frame by using the recognition vector:
 dataSubset <- variablesComplete[, variablesIndex]
@@ -69,7 +73,8 @@ names(dataComplete) <- c('person', 'activity', names(dataSubset))
 # PREPARING TIDY DATA FRAME
 
 ### compute average values for 'mean' and 'standard deviation' variables:
-tidyData <- aggregate(x = dataComplete[3:ncol(dataComplete)], by = list(dataComplete[, 1], dataComplete[, 2]), FUN = mean)
+tidyData <- aggregate(x = dataComplete[3:ncol(dataComplete)],
+                      by = list(dataComplete[, 1], dataComplete[, 2]), FUN = mean)
 
 ### create a function, which cleans activity label names:
 cleanActivities <- function(x) {
